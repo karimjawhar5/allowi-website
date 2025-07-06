@@ -21,7 +21,7 @@ const benefits = [
   },
   {
     title: 'For Schools & Vendors',
-    image: '/images/benefits/school.jpg',
+    image: '/images/benefits/School.jpg',
     bullets: [
       'Faster queues',
       'No cash handling',
