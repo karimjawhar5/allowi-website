@@ -10,7 +10,7 @@ export default function About() {
           
           {/* Left column – text content */}
           <div className="md:col-span-1">
-            <h2 className="text-5xl mt-4 mb-6 font-medium leading-snug text-brand-900">
+            <h2 className="text-3xl md:text-5xl mt-4 mb-6 font-medium leading-snug text-brand-900">
               Our Story
             </h2>
             <p className="text-lg text-gray-700">
