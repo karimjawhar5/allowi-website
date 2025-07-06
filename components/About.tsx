@@ -4,16 +4,15 @@ import Link from 'next/link';
 export default function About() {
   return (
     <section id="about" className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 pt-20 pb-40">
-
-        <div className="mt-12 grid gap-20 md:grid-cols-2 items-center">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-24 sm:py-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           
           {/* Left column – text content */}
-          <div className="md:col-span-1">
-            <h2 className="text-3xl md:text-5xl mt-4 mb-6 font-medium leading-snug text-brand-900">
+          <div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight text-brand-900 mb-6">
               Our Story
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
               Allowi is a family-founded startup reimagining how kids spend in a cashless world. 
               With tap-to-pay wearables, parental controls, and vendor integration, we’re building a safe, connected way for families to manage youth payments.
               <br /><br />
@@ -21,16 +20,17 @@ export default function About() {
               <br /><br />
               We’re just getting started, and we’d love for early supporters, families, and institutions to help shape what’s next.
             </p>
-            <div className="items-center gap-6 flex mt-12">
+
+            <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               <Link
                 href="#waitlist"
-                className="rounded-lg bg-brand-500 px-4 py-2 font-medium text-white shadow transition hover:bg-brand-600 focus-visible:outline"
+                className="inline-block rounded-lg bg-brand-500 px-5 py-3 text-sm sm:text-base font-medium text-white shadow hover:bg-brand-600 transition focus-visible:outline"
               >
                 Join&nbsp;Wait-List
               </Link>
               <Link
                 href="mailto:hello@allowi.co"
-                className="font-medium text-brand-900 transition hover:text-brand-600"
+                className="text-sm sm:text-base font-medium text-brand-900 hover:text-brand-600 transition"
               >
                 Get in Touch
               </Link>
@@ -38,14 +38,13 @@ export default function About() {
           </div>
 
           {/* Right column – image */}
-          <div className="relative w-full overflow-hidden rounded-2xl md:col-span-1">
+          <div className="w-full overflow-hidden rounded-2xl">
             <img
               src="/images/about.jpg"
-              alt="Child happy with parent"
-              className="h-auto w-full"
+              alt="Smiling child and parent using Allowi"
+              className="w-full h-auto object-cover"
             />
           </div>
-
         </div>
       </div>
     </section>
