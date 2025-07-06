@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { subscribe } from '@/lib/subscribe';
 
 export default function WaitlistForm() {
   const [email, setEmail] = useState('');
@@ -11,6 +10,7 @@ export default function WaitlistForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     if (!email.trim() || !email.includes('@')) {
       setStatus('error');
       setMessage('Please enter a valid email address.');
@@ -19,17 +19,24 @@ export default function WaitlistForm() {
 
     startTransition(async () => {
       try {
-        const ok = await subscribe(email);
-        if (ok) {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setStatus('error');
+          setMessage(data?.error || 'Something went wrong. Please try again.');
+        } else {
           setStatus('success');
           setMessage('Thanks! Check your inbox for confirmation.');
           setEmail('');
-        } else {
-          setStatus('error');
-          setMessage('Something went wrong. Please try again later.');
         }
       } catch (err) {
-        console.error('Subscription error:', err);
+        console.error('Client-side error:', err);
         setStatus('error');
         setMessage('Unexpected error. Please try again.');
       }
@@ -51,18 +58,18 @@ export default function WaitlistForm() {
       />
       <button
         type="submit"
-        className="rounded-lg bg-brand-500 px-6 py-3 font-medium text-white shadow hover:bg-brand-600 disabled:opacity-60"
         disabled={pending}
+        className="rounded-lg bg-brand-500 px-6 py-3 font-medium text-white shadow hover:bg-brand-600 disabled:opacity-60"
       >
         {pending ? 'Sending…' : 'Join Wait-List'}
       </button>
 
       {message && (
         <p
+          aria-live="polite"
           className={`pt-2 text-sm ${
             status === 'success' ? 'text-green-600' : 'text-red-600'
           }`}
-          aria-live="polite"
         >
           {message}
         </p>
