@@ -6,15 +6,33 @@ import { subscribe } from '@/lib/subscribe';
 export default function WaitlistForm() {
   const [email, setEmail] = useState('');
   const [pending, startTransition] = useTransition();
-  const [status, setStatus] = useState<
-    'idle' | 'success' | 'error'
-  >('idle');
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!email.trim() || !email.includes('@')) {
+      setStatus('error');
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+
     startTransition(async () => {
-      const ok = await subscribe(email);
-      setStatus(ok ? 'success' : 'error');
+      try {
+        const ok = await subscribe(email);
+        if (ok) {
+          setStatus('success');
+          setMessage('Thanks! Check your inbox for confirmation.');
+          setEmail('');
+        } else {
+          setStatus('error');
+          setMessage('Something went wrong. Please try again later.');
+        }
+      } catch (err) {
+        console.error('Subscription error:', err);
+        setStatus('error');
+        setMessage('Unexpected error. Please try again.');
+      }
     });
   }
 
@@ -39,14 +57,14 @@ export default function WaitlistForm() {
         {pending ? 'Sending…' : 'Join Wait-List'}
       </button>
 
-      {status === 'success' && (
-        <p className="pt-2 text-sm text-green-600">
-          Thanks! Check your inbox for confirmation.
-        </p>
-      )}
-      {status === 'error' && (
-        <p className="pt-2 text-sm text-red-600">
-          Something went wrong. Please try again.
+      {message && (
+        <p
+          className={`pt-2 text-sm ${
+            status === 'success' ? 'text-green-600' : 'text-red-600'
+          }`}
+          aria-live="polite"
+        >
+          {message}
         </p>
       )}
     </form>
