@@ -4,17 +4,16 @@ export const runtime = 'edge';
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
-
   const apiKey = process.env.MAILCHIMP_API_KEY;
-  const serverPrefix = process.env.MAILCHIMP_SERVER_PREFIX; // like 'us21'
+  const dc = process.env.MAILCHIMP_SERVER_PREFIX;
   const listId = process.env.MAILCHIMP_LIST_ID;
 
-  if (!email || !apiKey || !serverPrefix || !listId) {
-    return NextResponse.json({ error: 'Missing data' }, { status: 400 });
+  if (!email || !apiKey || !dc || !listId) {
+    return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  const response = await fetch(
-    `https://${serverPrefix}.api.mailchimp.com/3.0/lists/${listId}/members`,
+  const res = await fetch(
+    `https://${dc}.api.mailchimp.com/3.0/lists/${listId}/members`,
     {
       method: 'POST',
       headers: {
@@ -23,14 +22,15 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         email_address: email.toLowerCase(),
-        status: 'pending', // or 'subscribed' for instant
+        status: 'pending',
       }),
     }
   );
 
-  if (!response.ok) {
-    const error = await response.json();
-    return NextResponse.json({ error: error.detail }, { status: response.status });
+  if (!res.ok) {
+    const error = await res.json();
+    console.error('Mailchimp error:', error);
+    return NextResponse.json({ error: error.detail }, { status: res.status });
   }
 
   return NextResponse.json({ success: true });
